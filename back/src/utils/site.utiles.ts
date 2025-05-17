@@ -6,7 +6,7 @@ import helmet from "helmet";
 import { limiter } from "./Guards/limitRequest/site.limit.utils";
 
 export default (app: Application) => {
-  const allowedOrigins = ["http://localhost:3000", "https://egystay.lesoll-demo.site", 'http://127.0.0.1:5500'];
+  const allowedOrigins = ["http://localhost:5173", "https://egystay.lesoll-demo.site", 'http://127.0.0.1:5500'];
   const corsOptions = {
     origin: (origin: any, callback: any) => {
       if (allowedOrigins.includes(origin) || !origin) {

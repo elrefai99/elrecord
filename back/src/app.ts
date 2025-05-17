@@ -5,6 +5,7 @@ import siteUtiles from './utils/site.utiles'
 import { setupSwagger } from './swagger'
 import * as http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
+import appModule from './app.module'
 
 
 const app = express()
@@ -17,7 +18,7 @@ export const ioSocket = new SocketIOServer(server, {
 })
 
 siteUtiles(app)
-
+appModule(app)
 setupSwagger(app)
 
 app.use(async (_req: Request, res: Response) => {
