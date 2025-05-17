@@ -3,7 +3,8 @@ import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import bcrypt, { genSalt } from 'bcryptjs'
 import ServerError from "../../../utils/api.errors.utils";
 import { UserModel } from "../../../schema/User/user.schema";
-import { PendingToken } from "../../../utils/Guards/JWT/access.token";
+import { accountToken } from "../../../utils/Guards/JWT/access.token";
+import { refreshToken } from "../../../utils/Guards/JWT/refresh_token";
 
 export const registerController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
@@ -35,11 +36,14 @@ export const registerController = asyncHandler(
                code,
                phone,
                username,
-               status: "pending"
+               status: "active"
           })
 
-          const token = PendingToken(user._id, user.tokenVersion);
+          const token = accountToken(user._id, user.tokenVersion);
+          const refresh_token = refreshToken(user._id);
           res.cookie("__aadv", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1, });
+          res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1, });
+          res.cookie("refresh_token", refresh_token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1, });
           await user.save();
           // res.cookie()
 
