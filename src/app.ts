@@ -6,6 +6,7 @@ import { setupSwagger } from './swagger'
 import * as http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
 import appModule from './app.module'
+import { socketFunction } from './socket'
 
 
 const app = express()
@@ -20,6 +21,7 @@ export const ioSocket = new SocketIOServer(server, {
 siteUtiles(app)
 appModule(app)
 setupSwagger(app)
+socketFunction()
 
 app.use(async (_req: Request, res: Response) => {
      res.status(404).send('This is not the API route you are looking for')
@@ -27,5 +29,5 @@ app.use(async (_req: Request, res: Response) => {
 
 server.listen(process.env.PORT, () => {
   mongoDBConfig()
-  console.log(`✅ Server is running on port ${process.env.PORT}`)
+  console.log(`✅ Server is running on url: ${process.env.BASE_URL}`)
 })
