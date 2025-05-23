@@ -30,10 +30,6 @@ export const loginController = asyncHandler(
 
           const token = accountToken(cUser?._id, cUser?.tokenVersion);
           const refresh = refreshToken(cUser?._id);
-          // user.refreshToken = refresh;
-          // res.cookie()
-          res.cookie("__ssdt", refresh, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 7, });
-          res.cookie("__srmt", token, { httpOnly: process.env.NODE_ENV === 'development', secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1 });
           res.cookie("refresh_token", refresh, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 7, });
           res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1, });
 
