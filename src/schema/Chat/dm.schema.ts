@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
+import { IDM } from "../../interface/dm";
 
-const dmSchema = new Schema({
+const dmSchema = new Schema<IDM>({
   chat: {
     type: Schema.Types.ObjectId,
     ref: "Chat",
@@ -29,4 +30,4 @@ const dmSchema = new Schema({
   timestamps: true
 })
 
-export const dmModel = model('DM', dmSchema)
+export const dmModel = model<IDM>('DM', dmSchema)
