@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Response } from "express";
 import { UserModel } from "../../schema/User/user.schema";
+import { redisFunctions } from "../../Script/redis/redis.script";
 
 interface DataStored {
      _id: string;
@@ -32,6 +33,13 @@ export const profileMiddleware = async (req: RequestAuthentication | any, res: R
                if (err) {
                     res.status(403).json({ code: 403, status: "Forbidden", message: "there was an error creating with Token", });
                     return;
+               }
+               const classs = new redisFunctions()
+               const cacheKey = await classs.getData(decoded._id)
+
+               if (cacheKey) {
+                    res.status(200).json({ code: 200, status: "OK", data: cacheKey })
+                    return
                }
                const user: responseData | any = await UserModel.findOne({ _id: decoded._id, status: "active" }, { password: 0, notifications: 0, __v: 0, googleId: 0 });
                if (user && user?.tokenVersion === decoded?.vToken) {
