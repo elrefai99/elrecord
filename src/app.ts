@@ -7,7 +7,7 @@ import * as http from 'http'
 import { Server as SocketIOServer } from 'socket.io'
 import appModule from './app.module'
 import { socketFunction } from './socket'
-
+import client from "prom-client";
 
 const app = express()
 
@@ -22,6 +22,11 @@ siteUtiles(app)
 appModule(app)
 setupSwagger(app)
 socketFunction()
+
+app.get('/metrics', async (_req: Request, res: Response) => {
+     res.set('Content-Type', client.register.contentType);
+     res.end(await client.register.metrics());
+});
 
 app.use(async (_req: Request, res: Response) => {
      res.status(404).send('This is not the API route you are looking for')

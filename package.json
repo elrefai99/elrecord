@@ -18,7 +18,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-   "dependencies": {
+  "dependencies": {
     "axios": "^1.8.2",
     "bcryptjs": "^3.0.2",
     "canvas": "^3.1.0",
@@ -80,6 +80,7 @@
     "express-useragent": "^1.0.15",
     "googleapis": "^146.0.0",
     "nodemon": "^3.1.9",
+    "prom-client": "^15.1.3",
     "querystring": "^0.2.1",
     "request-ip": "^3.3.0",
     "sharp": "^0.34.1",
