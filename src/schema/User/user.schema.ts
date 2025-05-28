@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 import { IUser } from "../../interface/user";
 
 const userSchema = new Schema<IUser>({
-    fullname: {
+     fullname: {
           type: String,
           required: true,
           trim: true,
@@ -83,8 +83,8 @@ const userSchema = new Schema<IUser>({
           default: 0
      }
 }, {
-  timestamps: true,
-  autoIndex: true,
+     timestamps: true,
+     autoIndex: true,
 })
 
 export const UserModel = model<IUser>('User', userSchema)

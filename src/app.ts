@@ -28,6 +28,6 @@ app.use(async (_req: Request, res: Response) => {
 })
 
 server.listen(process.env.PORT, () => {
-  mongoDBConfig()
-  console.log(`✅ Server is running on url: ${process.env.BASE_URL}`)
+     mongoDBConfig()
+     console.log(`✅ Server is running on url: ${process.env.BASE_URL}`)
 })

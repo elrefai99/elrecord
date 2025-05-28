@@ -12,20 +12,20 @@ const dmSchema = new Schema<IDM>({
     ref: "User",
     index: true
   },
-     status: {
-          type: String,
-          enum: ["send", 'deleted'],
-          default: 'send'
-     },
-     seen: {
-          type: Boolean,
-          default: false,
-     },
-     message: {
-          type: String,
-          required: true,
-          default: ''
-     }
+  status: {
+    type: String,
+    enum: ["send", 'deleted'],
+    default: 'send'
+  },
+  seen: {
+    type: Boolean,
+    default: false,
+  },
+  message: {
+    type: String,
+    required: true,
+    default: ''
+  }
 }, {
   timestamps: true
 })
