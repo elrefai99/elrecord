@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { roomModel } from "../../../schema/Chat/rooms.schema";
 import mongoose from "mongoose";
+import { UserModel } from "../../../schema/User/user.schema";
 
 export const chatController = asyncHandler(
      async (req: Request | any, res: Response, _next: NextFunction) => {
@@ -52,6 +53,24 @@ export const chatController = asyncHandler(
           const total = result.totalMessage[0]?.total || 0
           const totalPages = Math.ceil(total / Number(limit))
 
-          res.status(200).json({ code: 200, status: "OK", data: chat, total, totalPages })
+          const filteredRooms = await Promise.all(chat.map(async (room: any) => {
+               const otherUserID =
+                    room.senderID.toString() === req.user.id
+                         ? room.receiverID
+                         : room.senderID;
+
+               const user = await UserModel.findById(otherUserID)
+                    .select("fName lName avatar")
+                    .lean();
+               return {
+                    _id: room._id,
+                    user,
+                    lastMessage: room.lastMassage,
+                    createdAt: room.createdAt,
+                    updatedAt: room.updatedAt,
+               };
+          }));
+
+          res.status(200).json({ code: 200, status: "OK", data: filteredRooms, total, totalPages })
      }
 )
