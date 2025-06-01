@@ -6,6 +6,7 @@ import { UserModel } from "../schema/User/user.schema";
 
 export const chatSocket = (io: Namespace) => {
   const userSockets = new Map<string, string>();
+  const chatSockets = new Map<string, string>();
 
   io.use(socketMiddleware)
 
@@ -13,6 +14,7 @@ export const chatSocket = (io: Namespace) => {
 
     const senderID = socket.data.user._id.toString()
     userSockets.set(senderID, socket.id);
+    chatSockets.set(senderID, socket.id);
 
     socket.on('send_message', async (receiver, message) => {
       let chat = await roomModel.findOne({ $or: [{ receiverID: receiver, senderID: senderID }, { receiverID: senderID, senderID: receiver }] }, {
@@ -23,7 +25,6 @@ export const chatSocket = (io: Namespace) => {
         chat = await roomModel.create({
           receiverID: receiver,
           senderID: senderID,
-          lastMassage: message
         })
       }
 
@@ -38,6 +39,9 @@ export const chatSocket = (io: Namespace) => {
         avatar: 1
       })
 
+      chat.lastMassage = message
+      await chat.save()
+
       const response = {
         ...dm.toObject(),
         user: {
@@ -46,11 +50,24 @@ export const chatSocket = (io: Namespace) => {
         }
       }
 
-      socket.emit('message_sent', response)
+      const gReceiver = chatSockets.get(receiver)
+      const gSender = chatSockets.get(senderID)
+
+      if (gReceiver) {
+        socket.to(receiver).emit('message_sent', response)
+      }
+
+      if (gSender) {
+        socket.to(senderID).emit('message_sent', response)
+      }
     })
     socket.on('disconnect', () => {
-      userSockets.delete(senderID);
+      if (userSockets.get(senderID) === socket.id) {
+        userSockets.delete(senderID);
+      }
+      if (chatSockets.get(senderID) === socket.id) {
+        chatSockets.delete(senderID);
+      }
     });
-
   })
 }
