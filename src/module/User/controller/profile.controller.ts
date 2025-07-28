@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
-import { redisFunctions } from "../../../Script/redis/redis.script";
+import { redisFunctions } from "../../../Common/Functions/redis/redis.script";
 
 export const profileController = asyncHandler(
      async (req: Request | any, res: Response, _next: NextFunction) => {

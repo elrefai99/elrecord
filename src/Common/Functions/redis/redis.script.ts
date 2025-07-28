@@ -1,4 +1,4 @@
-import redis from "../../config/redis.config"
+import redis from "../../../config/redis.config"
 
 export class redisFunctions {
      public async getData<T>(key: string): Promise<T | any> {

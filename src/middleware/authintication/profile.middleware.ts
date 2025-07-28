@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import { NextFunction, Response } from "express";
 import { UserModel } from "../../schema/User/user.schema";
-import { redisFunctions } from "../../Script/redis/redis.script";
+import { redisFunctions } from "../../Common/Functions/redis/redis.script";
 
 interface DataStored {
      _id: string;

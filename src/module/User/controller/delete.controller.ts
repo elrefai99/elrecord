@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { UserModel } from "../../../schema/User/user.schema";
-import { redisFunctions } from "../../../Script/redis/redis.script";
+import { redisFunctions } from "../../../Common/Functions/redis/redis.script";
 const cacheFunc = new redisFunctions()
 
 export const deleteController = asyncHandler(
