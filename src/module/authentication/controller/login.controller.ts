@@ -10,7 +10,7 @@ export const loginController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const { email, password } = req.body
 
-          const cUser = await UserModel.findOne({ status: "active", email: email }, {
+          const cUser = await UserModel.findOne({ status: "active", $or: [{ email: email }, { username: email }] }, {
                email: 1,
                password: 1,
                tokenVersion: 1,
