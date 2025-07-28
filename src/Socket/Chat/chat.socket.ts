@@ -1,12 +1,12 @@
 import { Namespace, Socket } from "socket.io";
-import { socketMiddleware } from "../middleware/authintication/socket.middleware";
-import { roomModel } from "../schema/Chat/rooms.schema";
-import { dmModel } from "../schema/Chat/dm.schema";
-import { UserModel } from "../schema/User/user.schema";
+import { socketMiddleware } from "../../middleware/authintication/socket.middleware";
+import { roomModel } from "../../schema/Chat/rooms.schema";
+import { dmModel } from "../../schema/Chat/dm.schema";
+import { UserModel } from "../../schema/User/user.schema";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { bucketName, s3Client } from "../config/AWS/s3.aws.config";
-import { getContentType } from "../Script/upload/image.contenttype";
-import { notificationChat } from "../middleware/notification/chat.middlware";
+import { bucketName, s3Client } from "../../config/AWS/s3.aws.config";
+import { getContentType } from "../../Script/upload/image.contenttype";
+import { notificationChat } from "../../middleware/notification/chat.middlware";
 
 export const chatSocket = (io: Namespace) => {
   const userSockets = new Map<string, string>();
@@ -19,6 +19,15 @@ export const chatSocket = (io: Namespace) => {
 
     userSockets.set(senderID, socket.id);
     chatSockets.set(senderID, socket.id);
+
+    socket.on('room:join', (room: string) => {
+      socket.join(room)
+    })
+    socket.on('room:join', (room: string) => {
+      socket.leave(room)
+    })
+
+
     socket.on('send_message', async (receiverID, message) => {
       let room = await roomModel.findOne({
         $or: [

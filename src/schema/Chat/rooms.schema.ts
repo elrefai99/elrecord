@@ -14,7 +14,7 @@ export const roomSchema = new Schema<IRooms>({
      },
      status: {
           type: String,
-          enum: ["active", 'deleted'],
+          enum: ["active", "pending", 'deleted'],
           default: 'active'
      },
      lastMassage: {

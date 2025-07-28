@@ -6,4 +6,6 @@ export interface IDM {
   status: string
   seen: boolean
   message: string
+  organicMessage: string
+  wrong: boolean
 }
