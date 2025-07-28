@@ -19,8 +19,12 @@ const serverSchema = new Schema<IServer>({
           enum: ["active", 'deleted', 'archived'],
           default: 'archived'
      },
+     image: {
+          type: String,
+          default: ""
+     }
 }, {
      timestamps: true
 })
 
-export const serverModel = model('server', serverSchema)
+export const serverModel = model<IServer>('server', serverSchema)

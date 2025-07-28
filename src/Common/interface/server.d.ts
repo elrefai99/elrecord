@@ -4,4 +4,5 @@ export interface IServer implements Document {
   owner: Types.ObjectId
   users: [Types.ObjectId]
   status: string
+  image: strign
 }
