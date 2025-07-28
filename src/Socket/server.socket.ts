@@ -13,7 +13,7 @@ export const ServerSocket = (io: Namespace) => {
           const senderID = socket.data.user._id.toString()
           userSockets.set(senderID, socket.id);
 
-          socket.on('send_serer_message', async (server, section, message) => {
+          socket.on('send_serer_message', async (server, section, _message) => {
                let serverDB = await ServersModel.findById(server)
                let sectionDB = await sectionModel.findOne({ section, server, status: "active" })
 

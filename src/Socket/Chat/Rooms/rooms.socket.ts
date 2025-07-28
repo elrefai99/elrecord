@@ -2,13 +2,13 @@ import { Namespace, Socket } from "socket.io";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { socketMiddleware } from "../../../middleware/authintication/socket.middleware";
 import { roomModel } from "../../../schema/Chat/rooms.schema";
-import { dmModel } from "../../../schema/Chat/dm.schema";
 import { UserModel } from "../../../schema/User/user.schema";
-import { notificationChat } from "../../../middleware/notification/chat.middlware";
 import { bucketName, s3Client } from "../../../config/AWS/s3.aws.config";
 import { getContentType } from "../../../Script/upload/image.contenttype";
+import { dmRoomModel } from "../../../schema/Chat/room.dm.schema";
+import mongoose from "mongoose";
 
-export const chatSocket = (io: Namespace) => {
+export const chatRoomsSocket = (io: Namespace) => {
      const userSockets = new Map<string, string>();
      const chatSockets = new Map<string, string>();
 
@@ -28,56 +28,43 @@ export const chatSocket = (io: Namespace) => {
           })
 
 
-          socket.on('send_message', async (receiverID, message) => {
-               let room = await roomModel.findOne({
-                    $or: [
-                         { receiverID, senderID },
-                         { receiverID: senderID, senderID: receiverID }
-                    ]
-               }, { _id: 1 });
+          socket.on('send_message', async (room: string, receiverID: string, message: string) => {
+               socket.join(room)
 
-               if (!room) {
-                    room = await roomModel.create({
-                         receiverID,
-                         senderID,
-                    });
-               }
-
-               const chat = await dmModel.create({
-                    chatID: room._id,
-                    senderID,
-                    message
+               let chat = await roomModel.findById(room, { _id: 1, status: 1 })
+               const senderUser = await UserModel.findById(new mongoose.Types.ObjectId(senderID), {
+                    fullname: 1,
+                    username: 1,
+                    avatarUrl: 1
                });
 
-               room.lastMassage = message;
-               await room.save();
-
-               const sender = await UserModel.findById(senderID).select('fullname avatar');
-
-               const gReceiver = chatSockets.get(receiverID);
-               const gSender = chatSockets.get(senderID);
-
-               if (gReceiver) {
-                    io.to(gReceiver).emit('message_sent', {
-                         ...chat.toObject(),
-                         senderID: {
-                              _id: sender?._id,
-                              fullname: `${sender?.fullname}`,
-                         }
-                    });
-                    const receiverNotification = userSockets.get(receiverID);
-                    await notificationChat(socket, receiverNotification, receiverID, sender, message);
+               if (chat?.status == "penfing") {
+                    chat.status = "active"
                }
 
-               if (gSender) {
-                    io.to(gSender).emit('message_sent', {
-                         ...chat.toObject(),
-                         senderID: {
-                              _id: sender?._id,
-                              fullname: `${sender?.fullname}`,
-                         }
-                    });
-               }
+               chat!.lastMassage = message;
+               await chat?.save()
+               let roomDM = await dmRoomModel.create({
+                    chat: chat?._id,
+                    sender: senderID,
+                    message: message,
+                    organicMessage: message,
+                    wrong: false
+               })
+
+               io.to(room).emit("message:sent", {
+                    ...roomDM.toObject(),
+                    senderID: {
+                         _id: senderUser?._id,
+                         fullname: `${senderUser?.fullname}`,
+                         username: senderUser?.username,
+                    }
+               })
+               const receiverNotification: any = userSockets.get(receiverID);
+
+               socket.to(receiverNotification).emit('notification:message', {
+                    title: `${senderUser?.fullname}: ${message}`
+               });
           });
 
           socket.on("upload-chat", async (file: { buffer: ArrayBuffer, name: string }, callback) => {
