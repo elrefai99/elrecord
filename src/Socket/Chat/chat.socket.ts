@@ -4,7 +4,7 @@ import { roomModel } from "../../schema/Chat/rooms.schema";
 import { dmModel } from "../../schema/Chat/dm.schema";
 import { UserModel } from "../../schema/User/user.schema";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { bucketName, s3Client } from "../../config/AWS/s3.aws.config";
+import { bucketName, s3Client } from "../../config/s3.aws.config";
 import { getContentType } from "../../Script/upload/image.contenttype";
 import { notificationChat } from "../../middleware/notification/chat.middlware";
 

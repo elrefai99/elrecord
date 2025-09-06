@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-import { bucketName, s3Client } from '../../config/AWS/s3.aws.config'
+import { bucketName, s3Client } from '../../config/s3.aws.config'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 const colorArray = [
