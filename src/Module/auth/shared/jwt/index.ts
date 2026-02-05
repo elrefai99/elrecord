@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 
-export const access_token = (id: string) => {
+export const access_token = (id: number) => {
      const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET as string
      return jwt.sign({ id }, SECRET_KEY, { expiresIn: "1d", algorithm: 'HS256' });
 }
 
-export const refresh_token = (id: string) => {
+export const refresh_token = (id: number) => {
      const SECRET_KEY = process.env.REFRESH_TOKEN_SECRET as string
      return jwt.sign({ id }, SECRET_KEY, { expiresIn: "7d", algorithm: 'HS256' });
 }
