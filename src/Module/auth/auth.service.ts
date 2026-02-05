@@ -12,7 +12,7 @@ export class auth_service {
 
      public async find_user_by_email(email: string): Promise<any> {
           try {
-               const user = await prisma.user.findUnique({
+               const user = await prisma.user.findFirst({
                     where: {
                          email: email,
                          status: UserStatus.ACTIVE
@@ -26,6 +26,8 @@ export class auth_service {
 
      public async create_user(data: register_dto): Promise<any> {
           try {
+               console.log(data);
+
                const salt = await bcrypt.genSalt(10);
                const hashedPassword = await bcrypt.hash(data.password, salt);
                const user = await prisma.user.create({

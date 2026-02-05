@@ -16,8 +16,8 @@ export const registerController = asyncHandler(
                return
           }
           const newUser = await authService.create_user(data)
-          const token = pending_token(newUser.id)
 
+          const token = pending_token(newUser.id)
           res.cookie("pending_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 1000 * 60 * 60 * 24 * 7, })
           return res.status(201).json({ code: 201, status: "Created", message: "User created successfully" });
      }

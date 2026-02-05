@@ -1,10 +1,7 @@
-import 'dotenv/config'
+import './dotenv'; // Load environment variables first
 import { PrismaClient } from "../generated/prisma";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
 
-const pool = new Pool({ connectionString: String(process.env.DATABASE_URL) });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+// Simple Prisma 6 setup - no adapter needed!
+const prisma = new PrismaClient();
 
 export default prisma;
