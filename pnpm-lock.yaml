@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@neondatabase/serverless':
-        specifier: ^1.0.2
-        version: 1.0.2
-      '@prisma/adapter-neon':
-        specifier: ^7.3.0
-        version: 7.3.0
       axios:
         specifier: ^1.8.2
         version: 1.9.0
@@ -96,12 +90,21 @@ importers:
       '@mohamed-elrefai/tsconfigs':
         specifier: ^1.0.2
         version: 1.0.2
+      '@neondatabase/serverless':
+        specifier: ^1.0.2
+        version: 1.0.2
+      '@prisma/adapter-neon':
+        specifier: ^7.3.0
+        version: 7.3.0
       '@prisma/adapter-pg':
         specifier: ^7.3.0
         version: 7.3.0
       '@prisma/client':
         specifier: ^7.3.0
         version: 7.3.0(prisma@7.3.0(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.8.3))(typescript@5.8.3)
+      '@prisma/extension-accelerate':
+        specifier: ^3.0.1
+        version: 3.0.1(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.8.3))(typescript@5.8.3))
       '@types/axios':
         specifier: ^0.14.4
         version: 0.14.4
@@ -163,7 +166,7 @@ importers:
         specifier: ^6.4.17
         version: 6.4.17
       '@types/pg':
-        specifier: ^8.11.11
+        specifier: ^8.15.1
         version: 8.15.1
       '@types/puppeteer':
         specifier: ^7.0.4
@@ -222,6 +225,9 @@ importers:
       redis:
         specifier: ^5.1.0
         version: 5.1.0
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
       request-ip:
         specifier: ^3.3.0
         version: 3.3.0
@@ -684,6 +690,12 @@ packages:
 
   '@prisma/engines@7.3.0':
     resolution: {integrity: sha512-cWRQoPDXPtR6stOWuWFZf9pHdQ/o8/QNWn0m0zByxf5Kd946Q875XdEJ52pEsX88vOiXUmjuPG3euw82mwQNMg==}
+
+  '@prisma/extension-accelerate@3.0.1':
+    resolution: {integrity: sha512-xc+kn4AjjTzS9jsdD1JWCebB09y0Aj+C8GjjG7oUm81PF9psvmJOw5rxpl7tOEBz/8hmuNX996XL28ys/OLxVA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@prisma/client': '>=4.16.1'
 
   '@prisma/fetch-engine@7.3.0':
     resolution: {integrity: sha512-Mm0F84JMqM9Vxk70pzfNpGJ1lE4hYjOeLMu7nOOD1i83nvp8MSAcFYBnHqLvEZiA6onUR+m8iYogtOY4oPO5lQ==}
@@ -2837,6 +2849,9 @@ packages:
     resolution: {integrity: sha512-5G5k9sYo5H5L0kd7UETiJZFTkIClH31fSmaEk2eU8E7mrmF0J1t6RqmFXOCJmSRlNd3QyvDUK/AWL9psbKaN0Q==}
     engines: {node: '>= 18'}
 
+  reflect-metadata@0.2.2:
+    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
+
   regexp-to-ast@0.5.0:
     resolution: {integrity: sha512-tlbJqcMHnPKI9zSrystikWKwHkBqu2a/Sgw01h3zFjvYrMxEDYHzzoMZnUrbIfpTFEsoRnnviOXNCzFiSc54Qw==}
 
@@ -4120,6 +4135,10 @@ snapshots:
       '@prisma/engines-version': 7.3.0-16.9d6ad21cbbceab97458517b147a6a09ff43aa735
       '@prisma/fetch-engine': 7.3.0
       '@prisma/get-platform': 7.3.0
+
+  '@prisma/extension-accelerate@3.0.1(@prisma/client@7.3.0(prisma@7.3.0(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.8.3))(typescript@5.8.3))':
+    dependencies:
+      '@prisma/client': 7.3.0(prisma@7.3.0(@types/react@19.2.11)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.8.3))(typescript@5.8.3)
 
   '@prisma/fetch-engine@7.3.0':
     dependencies:
@@ -6533,6 +6552,8 @@ snapshots:
       '@redis/json': 5.1.0(@redis/client@5.1.0)
       '@redis/search': 5.1.0(@redis/client@5.1.0)
       '@redis/time-series': 5.1.0(@redis/client@5.1.0)
+
+  reflect-metadata@0.2.2: {}
 
   regexp-to-ast@0.5.0: {}
 
