@@ -28,19 +28,6 @@ model User {
   @@index([status, role])
 }
 
-model OTP {
-  id       Int     @id @unique @default(autoincrement())
-  code     String  @db.VarChar(255)
-  site_id  String  @db.VarChar(255)
-  email_id String? @db.VarChar(255)
-  user_id  Int
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  user User @relation(fields: [user_id], references: [id])
-}
-
 enum Role {
   USER
   ADMIN
@@ -50,4 +37,27 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   BANNED
+}
+
+model OTP {
+  id        Int       @id @unique @default(autoincrement())
+  code      String    @db.VarChar(255)
+  site_id   String    @db.VarChar(255)
+  email_id  String?   @db.VarChar(255)
+  user_id   Int
+  status    OTPStatus @default(PENDING)
+  expiresAt DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id, status])
+}
+
+enum OTPStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
 }

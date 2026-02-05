@@ -49,8 +49,8 @@ export default (app: Application) => {
 
      app.use(async (req: Request, _, next: NextFunction) => {
           // get langouage of headers
-          (req as any).lang = (req.headers['accept-language'] === 'ar' || req.headers['accept-language'] === 'en') ? req.headers['accept-language'] : 'en' as string
-          (req as any).clientIP = req.headers["cf-connecting-ip"] || req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || req.socket.remoteAddress || "" as string
+          req.lang = (req.headers['accept-language'] === 'ar' || req.headers['accept-language'] === 'en') ? req.headers['accept-language'] : 'en' as string
+          req.clientIP = req.headers["cf-connecting-ip"] || req.headers["x-real-ip"] || req.headers["x-forwarded-for"] || req.socket.remoteAddress || "" as string
 
           if (req.path === "/metrics") {
                return next();

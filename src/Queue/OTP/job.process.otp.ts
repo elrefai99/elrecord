@@ -13,7 +13,8 @@ export const jobProcessor = async (job: Job): Promise<any> => {
           data: {
                code,
                site_id,
-               user_id: userId
+               user_id: userId,
+               expiresAt: new Date(Date.now() + 10 * 60 * 1000)
           }
      })
      const emailbody = `<p>your otp is ${otp.code}</p>`

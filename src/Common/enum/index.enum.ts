@@ -9,3 +9,9 @@ export enum UserStatus {
      INACTIVE = "INACTIVE",
      BANNED = "BANNED"
 }
+
+export enum OTPStatus {
+     PENDING = "PENDING",
+     VERIFIED = "VERIFIED",
+     EXPIRED = "EXPIRED"
+}
