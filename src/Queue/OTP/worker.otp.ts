@@ -2,11 +2,9 @@ import '../../core/dotenv'
 import { Worker, Job } from "bullmq";
 import { jobProcessor } from './job.process.otp';
 
-export const sendGraid_API_KEY: string = String(process.env.SENDGRID_API_KEY)
-
 const worker = new Worker("otpQueue", jobProcessor, {
      connection: {
-          url: process.env.NODE_ENV === "development" ? process.env.REDIS_HOST_LOCALHOST : process.env.REDIS_HOST,
+          url: process.env.REDIS_HOST,
      },
 });
 

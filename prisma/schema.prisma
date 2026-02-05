@@ -29,10 +29,10 @@ model User {
 }
 
 model OTP {
-  id       Int    @id @unique @default(autoincrement())
-  code     String @db.VarChar(255)
-  site_id  String @db.VarChar(255)
-  email_id String @db.VarChar(255)
+  id       Int     @id @unique @default(autoincrement())
+  code     String  @db.VarChar(255)
+  site_id  String  @db.VarChar(255)
+  email_id String? @db.VarChar(255)
   user_id  Int
 
   created_at DateTime @default(now())
