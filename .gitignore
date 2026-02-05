@@ -4,3 +4,5 @@ node_modules
 .env.production
 *dist
 *html
+
+/src/generated/prisma
