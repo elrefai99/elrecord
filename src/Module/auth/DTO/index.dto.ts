@@ -22,3 +22,13 @@ export class register_dto {
      @IsNotEmpty()
      public country_code: string
 }
+
+export class login_dto {
+     @IsString()
+     @IsNotEmpty()
+     public email: string
+
+     @IsString()
+     @IsNotEmpty()
+     public password: string
+}
