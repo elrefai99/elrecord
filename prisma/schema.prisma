@@ -8,19 +8,32 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @unique @default(autoincrement())
-  fullname     String     @db.VarChar(255)
-  username     String?    @db.VarChar(255)
-  email        String     @unique @db.VarChar(255)
-  password     String     @db.VarChar(255)
-  avatar       String?    @db.VarChar(255)
-  country_code String?    @db.VarChar(255)
-  phone        String?    @db.VarChar(255)
-  status       UserStatus @default(INACTIVE)
-  role         Role       @default(USER)
+  id               Int        @id @unique @default(autoincrement())
+  fullname         String     @db.VarChar(255)
+  username         String?    @db.VarChar(255)
+  email            String     @unique @db.VarChar(255)
+  password         String     @db.VarChar(255)
+  updatePasswordAt DateTime?
+  avatar           String?    @db.VarChar(255)
+  country_code     String?    @db.VarChar(255)
+  phone            String?    @db.VarChar(255)
+  status           UserStatus @default(INACTIVE)
+  role             Role       @default(USER)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  otps      OTP[]
+}
+
+model OTP {
+  id      Int    @id @unique @default(autoincrement())
+  code    String @db.VarChar(255)
+  user_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
 }
 
 enum Role {

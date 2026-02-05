@@ -5,6 +5,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import cookieParser from "cookie-parser";
+import appModule from "./app.module";
 
 export const allowedOrigins: string[] = [
      process.env.SITE_URL_TEST as string,
@@ -56,4 +57,5 @@ export default (app: Application) => {
           }
           next();
      });
+     appModule(app)
 }
