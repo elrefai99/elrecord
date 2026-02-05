@@ -79,6 +79,7 @@
     "@types/uuid": "^10.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "concurrently": "^9.2.1",
     "exceljs": "^4.4.0",
     "express-useragent": "^1.0.15",
     "googleapis": "^146.0.0",
