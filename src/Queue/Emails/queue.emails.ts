@@ -15,6 +15,6 @@ const REMOVE_CONFIG = {
      },
 };
 
-export async function addOTPJobToQueue<T>(name: string, data: T): Promise<Job<T>> {
+export async function addEmailsJobToQueue<T>(name: string, data: T): Promise<Job<T>> {
      return await queue.add(name, data, REMOVE_CONFIG);
 }

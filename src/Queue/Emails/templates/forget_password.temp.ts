@@ -1,5 +1,5 @@
-export const forget_password_temp = (data: { code: string, link: string }) => {
-     return `
+export const forget_password_temp = (data: { link: string }) => {
+    return `
      <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -2,10 +2,10 @@ import { Job } from "bullmq";
 import { forget_password_temp } from "./templates/forget_password.temp";
 import { nodemailerFunction } from "../shared/nodemailer";
 
-const sendEmail = async (data: any) => {
-     switch (data.type) {
+const sendEmail = async (payload: any) => {
+     switch (payload.data.type) {
           case "forgetPassword":
-               return nodemailerFunction(data.email, forget_password_temp(data), "Forget Password")
+               return nodemailerFunction(payload.data.email, forget_password_temp(payload.data), payload.data.subject)
           default:
                return ""
      }
