@@ -13,7 +13,7 @@ export const allowedOrigins: string[] = [
      process.env.SITE_URL_LIVE as string,
      process.env.SITE_URL_LIVE_VERCEL as string,
      process.env.SITE_URL_LIVE_FLYIO as string,
-     process.env.SITE_URL_LIVE_DASHBOARD as string,
+     process.env.SITE_URL_LOCALHOST as string,
      process.env.APS_SANDBOX_LINK as string,
      process.env.APS_LIVE_LINK as string,
 ];
