@@ -4,6 +4,7 @@ import { UserStatus } from "../../generated/prisma/enums";
 import { register_dto } from "./DTO/index.dto";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
+import { avatarProfile } from "./shared/avatar";
 
 export class auth_service {
      // private redis: cache_service
@@ -29,6 +30,7 @@ export class auth_service {
           try {
                const salt = await bcrypt.genSalt(10);
                const hashedPassword = await bcrypt.hash(data.password, salt);
+               const avatar = await avatarProfile(data.fullname, uuidv4());
                const user = await prisma.user.create({
                     data: {
                          fullname: data.fullname,
@@ -37,6 +39,7 @@ export class auth_service {
                          password: hashedPassword,
                          phone: data.phone,
                          country_code: data.country_code,
+                         avatar: avatar
                     },
                });
                return user;

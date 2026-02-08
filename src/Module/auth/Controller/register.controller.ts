@@ -3,8 +3,8 @@ import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { register_dto } from "../DTO/index.dto";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
-import { pending_token } from "../shared/jwt";
 import { addOTPJobToQueue } from "../../../Queue/OTP/queue.otp";
+import { token_PASETO } from "../shared/paseto";
 
 export const registerController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
@@ -18,7 +18,7 @@ export const registerController = asyncHandler(
           }
           const newUser = await authService.create_user(data)
 
-          const token = pending_token(newUser.id)
+          const token = await token_PASETO({ data: { user_id: newUser.id } }, "pending")
           await addOTPJobToQueue("otp", { userId: newUser.id, email: newUser.email })
           res.cookie("pending_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 1000 * 60 * 60 * 2, })
           return res.status(201).json({ code: 201, status: "Created", message: "User created successfully" });

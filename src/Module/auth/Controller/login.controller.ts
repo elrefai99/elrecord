@@ -4,7 +4,7 @@ import { login_dto } from "../DTO/index.dto";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
 import bcrypt from 'bcryptjs'
-import { access_token, refresh_token } from "../shared/jwt";
+import { token_PASETO } from "../shared/paseto";
 
 export const loginController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
@@ -26,8 +26,8 @@ export const loginController = asyncHandler(
                return
           }
 
-          const token = access_token(user._id)
-          const refreshToken = refresh_token(user._id)
+          const token = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string }, "access")
+          const refreshToken = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string }, "refresh")
 
           res.cookie("refresh_token", refreshToken, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 7 });
           res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1 });
