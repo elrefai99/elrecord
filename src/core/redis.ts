@@ -1,7 +1,7 @@
 import { createClient } from 'redis';
 
 const client: any = createClient({
-     url: process.env.NODE_ENV == "development" ? process.env.REDIS_HOST_LOCALHOST : process.env.REDIS_HOST,
+     url: process.env.REDIS_HOST,
      socket: {
           connectTimeout: 30000,
           reconnectStrategy: (retries) => Math.min(retries * 100, 3000),
