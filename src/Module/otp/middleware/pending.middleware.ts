@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
-import jwt from "jsonwebtoken";
 import ServerError from "../../../utils/api.errors.utils";
 import prisma from "../../../core/prisma";
 import { UserStatus } from "../../../Common/enum/index.enum";
+import { createPublicKey } from "crypto";
+import { V4 } from "paseto";
 
 export const pendingTokenMiddleware = asyncHandler(
      async (req: Request, _res: Response, next: NextFunction) => {
@@ -11,26 +12,27 @@ export const pendingTokenMiddleware = asyncHandler(
           const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.pending_token;
 
           if (token) {
-               jwt.verify(token, process.env.PENDING_TOKEN_SECRET as string, { algorithms: ['HS256'] },
-                    async (err: any, decoded: any) => {
-                         if (err) {
-                              return next(new ServerError("Invalid token", 401))
+               const publicKey = createPublicKey(process.env.PUBLIC_PENDING_TOKEN_SECRET as string)
+               await V4.verify(token, publicKey).then(async (payload: any) => {
+                    const user = await prisma.user.findFirst({
+                         where: {
+                              id: payload.data.user_id,
+                              status: UserStatus.INACTIVE
                          }
-                         const user = await prisma.user.findFirst({
-                              where: {
-                                   id: decoded.id as number,
-                                   status: UserStatus.INACTIVE
-                              }
-                         })
-                         if (!user) {
-                              return next(new ServerError("User not found", 404))
-                         }
-                         req.user = user
-                         next()
+                    })
+                    if (!user) {
+                         return next(new ServerError("User not found or not inactive", 404))
                     }
-               )
+                    req.user = user
+                    next()
+                    return
+               }).catch((err) => {
+                    next(new ServerError(`Invalid token: ${err}`, 401))
+                    return
+               })
           } else {
-               return next(new ServerError("Token not found", 401))
+               next(new ServerError("Token not found", 401))
+               return
           }
      }
 )

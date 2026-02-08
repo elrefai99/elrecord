@@ -1,0 +1,54 @@
+import { createPrivateKey } from "node:crypto"
+import { V4 } from "paseto"
+import { ITokenPayload } from "../@types"
+
+type TokenType = "access" | "refresh" | "pending"
+
+export const token_PASETO = async (payload: ITokenPayload, type: TokenType): Promise<string> => {
+     switch (type) {
+          case "access":
+               const privateKey = createPrivateKey(process.env.PRIVATE_ACCESS_TOKEN_SECRET as string)
+               const token = await V4.sign(
+                    {
+                         data: { user_id: payload.data.user_id },
+                         role: payload.role,
+                         site: "elrecord",
+                         token_version: 2,
+                         access_device: payload.access_device
+                    },
+                    privateKey,
+                    { expiresIn: "1d" }
+               )
+               return token
+          case "refresh":
+               const privateKeyRefresh = createPrivateKey(process.env.PRIVATE_REFRESH_TOKEN_SECRET as string)
+               const tokenRefresh = await V4.sign(
+                    {
+                         data: { user_id: payload.data.user_id },
+                         role: payload.role,
+                         site: "elrecord",
+                         token_version: 2,
+                         access_device: payload.access_device
+                    },
+                    privateKeyRefresh,
+                    { expiresIn: "7d" }
+               )
+               return tokenRefresh
+
+          case "pending":
+               const privateKeyPending = createPrivateKey(process.env.PRIVATE_PENDING_TOKEN_SECRET as string)
+               const tokenPending = await V4.sign(
+                    {
+                         data: { user_id: payload.data.user_id },
+                         role: payload.role,
+                         site: "elrecord",
+                         token_version: 2,
+                         access_device: payload.access_device
+                    },
+                    privateKeyPending,
+                    { expiresIn: "2h" }
+               )
+               return tokenPending
+     }
+
+}
