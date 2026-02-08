@@ -6,9 +6,10 @@ services:
       args:
         DATABASE_URL: ${DATABASE_URL}
     env_file:
-      - .env
+      - .env.dev
     environment:
       NODE_ENV: development
+      DATABASE_URL: ${DATABASE_URL}
       REDIS_HOST: redis://redis:6379
     ports:
       - "${PORT}:9000"
