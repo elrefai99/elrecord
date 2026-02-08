@@ -3,13 +3,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      args:
-        DATABASE_URL: ${DATABASE_URL}
     env_file:
       - .env.dev
     environment:
       NODE_ENV: development
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5430/app_db
       REDIS_HOST: redis://redis:6379
     ports:
       - "${PORT}:9000"
@@ -19,6 +17,25 @@ services:
     command: npm run dev
     depends_on:
       - redis
+      - postgres
+    networks:
+      - elrecord_network
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app_db
+
+    ports:
+      - "5430:5430"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - elrecord_network
 
@@ -29,6 +46,8 @@ services:
       - "6379:6379"
     networks:
       - elrecord_network
+volumes:
+  postgres_data:
 
 networks:
   elrecord_network:
