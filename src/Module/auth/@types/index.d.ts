@@ -3,5 +3,5 @@ export interface ITokenPayload {
      role?: string;
      site?: string;
      token_version?: number;
-     access_device?: number;
+     access_device?: string;
 }

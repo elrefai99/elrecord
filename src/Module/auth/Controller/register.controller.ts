@@ -18,7 +18,7 @@ export const registerController = asyncHandler(
           }
           const newUser = await authService.create_user(data)
 
-          const token = await token_PASETO({ data: { user_id: user._id } }, "pending")
+          const token = await token_PASETO({ data: { user_id: newUser.id } }, "pending")
           await addOTPJobToQueue("otp", { userId: newUser.id, email: newUser.email })
           res.cookie("pending_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 1000 * 60 * 60 * 2, })
           return res.status(201).json({ code: 201, status: "Created", message: "User created successfully" });

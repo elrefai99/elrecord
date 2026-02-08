@@ -2,7 +2,7 @@ import { createPrivateKey } from "node:crypto"
 import { V4 } from "paseto"
 import { ITokenPayload } from "../@types"
 
-type TokenType = "access" | "refresh" | "pending"
+type TokenType = "access" | "refresh" | "pending" | "forget_password"
 
 export const token_PASETO = async (payload: ITokenPayload, type: TokenType): Promise<string> => {
      switch (type) {
@@ -49,6 +49,20 @@ export const token_PASETO = async (payload: ITokenPayload, type: TokenType): Pro
                     { expiresIn: "2h" }
                )
                return tokenPending
+          case "forget_password":
+               const privateKeyForgetPassword = createPrivateKey(process.env.PRIVATE_FORGET_PASSWORD_SECRET_KY as string)
+               const tokenForgetPassword = await V4.sign(
+                    {
+                         data: { user_id: payload.data.user_id },
+                         role: payload.role,
+                         site: "elrecord",
+                         token_version: 2,
+                         access_device: payload.access_device
+                    },
+                    privateKeyForgetPassword,
+                    { expiresIn: "2h" }
+               )
+               return tokenForgetPassword
      }
 
 }

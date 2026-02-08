@@ -26,8 +26,8 @@ export const loginController = asyncHandler(
                return
           }
 
-          const token = await token_PASETO({ data: { user_id: user.id } }, "access")
-          const refreshToken = await token_PASETO({ data: { user_id: user.id } }, "refresh")
+          const token = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string }, "access")
+          const refreshToken = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string }, "refresh")
 
           res.cookie("refresh_token", refreshToken, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 7 });
           res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1 });
