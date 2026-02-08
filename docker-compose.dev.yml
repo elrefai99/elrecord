@@ -7,7 +7,7 @@ services:
       - .env.dev
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5430/app_db
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/app_db
       REDIS_HOST: redis://redis:6379
     ports:
       - "${PORT}:9000"
@@ -30,9 +30,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: app_db
-
     ports:
-      - "5430:5430"
+      - "5430:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -46,8 +45,12 @@ services:
       - "6379:6379"
     networks:
       - elrecord_network
+    volumes:
+      - redis_data:/data
+    
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   elrecord_network:
