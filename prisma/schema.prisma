@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -63,10 +63,14 @@ enum OTPStatus {
 }
 
 model DMs {
-  id      Int      @id @unique @default(autoincrement())
-  users   Int[]
-  message String   @db.VarChar(255)
-  status  DMStatus @default(PENDING)
+  id              Int      @id @unique @default(autoincrement())
+  users           Int[]
+  message         String   @db.VarChar(255)
+  status          DMStatus @default(PENDING)
+  maxSize_number  Int      @default(5)
+  maxSize_unit    String   @default("MB")
+  maxUsers_number Int      @default(5)
+  maxUsers_unit   String   @default("users")
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
