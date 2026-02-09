@@ -6,6 +6,7 @@ import { Server as SocketIOServer } from 'socket.io'
 import appConfig, { allowedOrigins } from './app.config';
 import prisma from './core/prisma';
 import { redisConfig } from './core/redis';
+import { socketFunction } from './socket.io';
 
 const app = express()
 const server = http.createServer(app)
@@ -18,6 +19,7 @@ ioSocket = new SocketIOServer(server, {
 })
 
 appConfig(app)
+socketFunction()
 
 app.use(async (_req: Request, res: Response) => {
      res.status(404).send('This is not the API route you are looking for')
