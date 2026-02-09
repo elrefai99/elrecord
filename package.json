@@ -90,7 +90,7 @@
     "express-useragent": "^1.0.15",
     "googleapis": "^146.0.0",
     "nodemon": "^3.1.9",
-    "pg": "^8.15.6",
+    "pg": "^8.18.0",
     "prisma": "^7.3.0",
     "prom-client": "^15.1.3",
     "querystring": "^0.2.1",

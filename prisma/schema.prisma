@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -20,12 +20,14 @@ model User {
   status           UserStatus @default(INACTIVE)
   role             Role       @default(USER)
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  otps      OTP[]
-  dms       DMs[]
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  otps                   OTP[]
+  dms                    DMs[]
+  sentFriendRequests     friends[] @relation("SentFriendRequests")
+  receivedFriendRequests friends[] @relation("ReceivedFriendRequests")
 
-  @@index([status, role])
+  @@index([id, status, role])
 }
 
 enum Role {
@@ -53,7 +55,7 @@ model OTP {
 
   user User @relation(fields: [user_id], references: [id])
 
-  @@index([user_id, status])
+  @@index([id, user_id, status])
 }
 
 enum OTPStatus {
@@ -64,7 +66,9 @@ enum OTPStatus {
 
 model DMs {
   id              Int      @id @unique @default(autoincrement())
+  uuid            String   @db.VarChar(255)
   users           Int[]
+  rooms           Int
   message         String   @db.VarChar(255)
   status          DMStatus @default(PENDING)
   maxSize_number  Int      @default(5)
@@ -75,13 +79,60 @@ model DMs {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user       User?    @relation(fields: [userId], references: [id])
+  room       rooms?   @relation(fields: [roomId], references: [id])
   userId     Int?
+  roomId     Int?
 
-  @@index([users])
+  @@index([id, users, status, uuid])
+}
+
+model rooms {
+  id              Int        @id @unique @default(autoincrement())
+  users           Int[]
+  uuid            String     @db.VarChar(255)
+  type            type_rooms @default(DMS)
+  maxSize_number  Int        @default(5)
+  maxSize_unit    String     @default("MB")
+  maxUsers_number Int        @default(5)
+  maxUsers_unit   String     @default("users")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dms       DMs[]
+
+  @@index([id, users, uuid])
+}
+
+model friends {
+  id         Int           @id @unique @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  uuid       String        @db.VarChar(255)
+  status     friendsStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sender   User @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId]) // Prevent duplicate friend requests
+  @@index([id, senderId, receiverId, status, uuid])
+}
+
+enum friendsStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum DMStatus {
   PENDING
   DELIVERED
   READ
+}
+
+enum type_rooms {
+  DMS
+  SERVER
 }
