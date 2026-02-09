@@ -103,5 +103,16 @@ export class FriendsService {
           return data
      }
 
-
+     public async check_friendship(payload: number) {
+          const friendship = await this.prisma.friends.findFirst({
+               where: {
+                    status: "ACCEPTED",
+                    OR: [
+                         { senderId: payload },
+                         { receiverId: payload }
+                    ]
+               }
+          })
+          return friendship
+     }
 }
