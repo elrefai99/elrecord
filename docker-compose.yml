@@ -6,16 +6,33 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        DATABASE_URL: ${DATABASE_URL}
     env_file:
       - .env
     environment:
       NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/app_db
       REDIS_HOST: redis://redis:6379
     depends_on:
       - redis
+      - postgres
     restart: always
+    networks:
+      - elrecord_network
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: always
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app_db
+    ports:
+      - "5430:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - elrecord_network
 
@@ -43,8 +60,9 @@ services:
       - elrecord_network
 
 volumes:
+  postgres_data:
   redis_data:
-
+  
 networks:
   elrecord_network:
     driver: bridge
