@@ -33,5 +33,3 @@ prisma.$connect().then(() => {
 }).catch((error) => {
      console.log(error);
 })
-
-
