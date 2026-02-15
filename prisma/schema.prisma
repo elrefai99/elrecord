@@ -8,80 +8,60 @@ datasource db {
 }
 
 model User {
-  id               Int        @id @unique @default(autoincrement())
-  fullname         String     @db.VarChar(255)
-  username         String?    @db.VarChar(255)
-  email            String     @db.VarChar(255)
-  password         String     @db.VarChar(255)
-  updatePasswordAt DateTime?
-  avatar           String?    @db.VarChar(255)
-  country_code     String?    @db.VarChar(255)
-  phone            String?    @db.VarChar(255)
-  status           UserStatus @default(INACTIVE)
-  role             Role       @default(USER)
-
-  createdAt              DateTime  @default(now())
-  updatedAt              DateTime  @updatedAt
-  otps                   OTP[]
+  id                     Int        @id @unique @default(autoincrement())
+  fullname               String     @db.VarChar(255)
+  username               String?    @db.VarChar(255)
+  email                  String     @db.VarChar(255)
+  password               String     @db.VarChar(255)
+  avatar                 String?    @db.VarChar(255)
+  country_code           String?    @db.VarChar(255)
+  phone                  String?    @db.VarChar(255)
+  role                   Role       @default(USER)
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
+  status                 UserStatus @default(INACTIVE)
+  updatePasswordAt       DateTime?
   dms                    DMs[]
-  sentFriendRequests     friends[] @relation("SentFriendRequests")
-  receivedFriendRequests friends[] @relation("ReceivedFriendRequests")
+  otps                   OTP[]
+  sentFriendRequests     friends[]  @relation("SentFriendRequests")
+  receivedFriendRequests friends[]  @relation("ReceivedFriendRequests")
+  friends                friends[]
 
   @@index([id, status, role])
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-  BANNED
-}
-
 model OTP {
-  id        Int       @id @unique @default(autoincrement())
-  code      String    @db.VarChar(255)
-  site_id   String    @db.VarChar(255)
-  email_id  String?   @db.VarChar(255)
-  user_id   Int
-  status    OTPStatus @default(PENDING)
-  expiresAt DateTime?
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  user User @relation(fields: [user_id], references: [id])
+  id         Int       @id @unique @default(autoincrement())
+  code       String    @db.VarChar(255)
+  user_id    Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  email_id   String?   @db.VarChar(255)
+  site_id    String    @db.VarChar(255)
+  expiresAt  DateTime?
+  status     OTPStatus @default(PENDING)
+  user       User      @relation(fields: [user_id], references: [id])
 
   @@index([id, user_id, status])
 }
 
-enum OTPStatus {
-  PENDING
-  VERIFIED
-  EXPIRED
-}
-
 model DMs {
   id              Int      @id @unique @default(autoincrement())
-  uuid            String   @db.VarChar(255)
   users           Int[]
-  rooms           Int
   message         String   @db.VarChar(255)
   status          DMStatus @default(PENDING)
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  userId          Int?
   maxSize_number  Int      @default(5)
   maxSize_unit    String   @default("MB")
   maxUsers_number Int      @default(5)
   maxUsers_unit   String   @default("users")
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  user       User?    @relation(fields: [userId], references: [id])
-  room       rooms?   @relation(fields: [roomId], references: [id])
-  userId     Int?
-  roomId     Int?
+  roomId          Int?
+  rooms           Int
+  uuid            String   @db.VarChar(255)
+  room            rooms?   @relation(fields: [roomId], references: [id])
+  user            User?    @relation(fields: [userId], references: [id])
 
   @@index([id, users, status, uuid])
 }
@@ -95,10 +75,9 @@ model rooms {
   maxSize_unit    String     @default("MB")
   maxUsers_number Int        @default(5)
   maxUsers_unit   String     @default("users")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  dms       DMs[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  dms             DMs[]
 
   @@index([id, users, uuid])
 }
@@ -113,11 +92,30 @@ model friends {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sender   User @relation("SentFriendRequests", fields: [senderId], references: [id])
-  receiver User @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+  sender   User  @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiver User  @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+  user     User? @relation(fields: [userId], references: [id])
+  userId   Int?
 
   @@unique([senderId, receiverId]) // Prevent duplicate friend requests
   @@index([id, senderId, receiverId, status, uuid])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
+}
+
+enum OTPStatus {
+  PENDING
+  VERIFIED
+  EXPIRED
 }
 
 enum friendsStatus {
