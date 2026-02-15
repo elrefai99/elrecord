@@ -1,22 +1,22 @@
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { isLoading, error } = storeToRefs(authStore);
 
 const email = ref('');
 const password = ref('');
-const error = ref('');
 
 const handleLogin = async () => {
   try {
     await authStore.login({ email: email.value, password: password.value });
     router.push('/dashboard');
-  } catch (err: any) {
-    error.value = err.message || 'Login failed';
+  } catch (err) {
+    // Error is handled in store and exposed via error ref
   }
 };
 </script>

@@ -27,7 +27,7 @@ export const refreshController = asyncHandler(
                }
                const token = await token_PASETO(payload, "access")
                res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 24 * 60 * 60 * 1000 })
-               res.status(200).json({ code: 200, status: "OK", message: "Refresh token successful" })
+               res.status(200).json({ code: 200, status: "OK", timestamp: new Date().toISOString(), success: true, error: false, message: "Refresh token successful", token })
                return
           }).catch((err) => {
                next(new ServerError(`Invalid refresh token: ${err}`, 401))

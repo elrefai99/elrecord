@@ -20,4 +20,4 @@ worker.on("failed", (job: Job | undefined, err: Error, _prev: string) => {
      }
 });
 
-console.log("🔢 Message Queue of otp work now ");
+console.log("🔢 Message Queue of OTP Worker is now running ");

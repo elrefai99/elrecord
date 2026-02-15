@@ -17,7 +17,7 @@ export const requestFriendController = asyncHandler(
           const uuid = uuidv4()
           await friendService.create_friend_request({
                userId: req.user.id as number,
-               receiverId: payload.receiverId as number,
+               receiverId: parseInt(payload.receiverId) as number,
                uuid: uuid,
                status: "PENDING",
           })

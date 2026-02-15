@@ -20,4 +20,4 @@ worker.on("failed", (job: Job | undefined, err: Error, _prev: string) => {
      }
 });
 
-console.log("📧 Message Queue of emails work now ");
+console.log("📧 Message Queue of Email Worker is now running ");
