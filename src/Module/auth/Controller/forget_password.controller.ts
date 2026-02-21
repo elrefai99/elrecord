@@ -2,7 +2,7 @@ import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { NextFunction, Request, Response } from "express";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
-import { token_PASETO } from "../shared/paseto";
+import { token_PASETO } from "../utils/paseto";
 import { addEmailsJobToQueue } from "../../../Queue/Emails/queue.emails";
 
 export const forgetPasswordController = asyncHandler(

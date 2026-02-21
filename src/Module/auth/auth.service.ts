@@ -3,7 +3,7 @@ import prisma from "../../core/prisma";
 import { register_dto } from "./DTO/index.dto";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import { avatarProfile } from "./shared/avatar";
+import { avatarProfile } from "./functions/avatar";
 import { UserStatus } from "../../Common/enum/index.enum";
 
 export class auth_service {

@@ -4,7 +4,7 @@ import { ITokenPayload } from "../@types"
 
 type TokenType = "access" | "refresh" | "pending" | "forget_password"
 
-export const token_PASETO = async (payload: ITokenPayload, type: TokenType): Promise<string> => {
+export const token_PASETO = async (payload: ITokenPayload, type: TokenType, expiresIn?: string): Promise<string> => {
      switch (type) {
           case "access":
                const privateKey = createPrivateKey(process.env.PRIVATE_ACCESS_TOKEN_SECRET as string)
@@ -17,7 +17,7 @@ export const token_PASETO = async (payload: ITokenPayload, type: TokenType): Pro
                          access_device: payload.access_device
                     },
                     privateKey,
-                    { expiresIn: "1d" }
+                    { expiresIn: "2h" }
                )
                return token
           case "refresh":
@@ -31,7 +31,7 @@ export const token_PASETO = async (payload: ITokenPayload, type: TokenType): Pro
                          access_device: payload.access_device
                     },
                     privateKeyRefresh,
-                    { expiresIn: "7d" }
+                    { expiresIn: expiresIn || "30d" }
                )
                return tokenRefresh
 
