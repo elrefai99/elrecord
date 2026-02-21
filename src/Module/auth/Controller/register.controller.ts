@@ -4,7 +4,7 @@ import { register_dto } from "../DTO/index.dto";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
 import { addOTPJobToQueue } from "../../../Queue/OTP/queue.otp";
-import { token_PASETO } from "../shared/paseto";
+import { token_PASETO } from "../utils/paseto";
 
 export const registerController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {

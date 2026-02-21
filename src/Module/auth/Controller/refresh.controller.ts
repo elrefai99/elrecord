@@ -4,7 +4,7 @@ import ServerError from "../../../utils/api.errors.utils"
 import { createPublicKey } from "node:crypto"
 import { V4 } from "paseto"
 import prisma from "../../../core/prisma"
-import { token_PASETO } from "../shared/paseto"
+import { token_PASETO } from "../utils/paseto"
 
 export const refreshController = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
@@ -25,8 +25,16 @@ export const refreshController = asyncHandler(
                     next(new ServerError("User not found", 404))
                     return
                }
-               const token = await token_PASETO(payload, "access")
-               res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 24 * 60 * 60 * 1000 })
+
+               // calculate remaining time for the refresh token
+               const expireDate: Date = new Date(payload.exp)
+               const remainingMs: number = expireDate.getTime() - Date.now()
+               const remainingSeconds: number = Math.floor(remainingMs / 1000)
+
+               const token: string = await token_PASETO(payload, "access")
+               const tokenRefresh: string = await token_PASETO(payload, "refresh", `${remainingSeconds}`)
+               res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: remainingSeconds })
+               res.cookie("refresh_token", tokenRefresh, { httpOnly: true, secure: true, sameSite: "strict", maxAge: remainingSeconds })
                res.status(200).json({ code: 200, status: "OK", message: "Refresh token successful" })
                return
           }).catch((err) => {
