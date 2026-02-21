@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { FriendsService } from "../friends.service";
 import ServerError from "../../../utils/api.errors.utils";
 import { v4 as uuidv4 } from 'uuid';
 
-export const requestFriendController = asyncHandler(
+export const requestFriendController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const payload = req.body
           const friendService: FriendsService = new FriendsService()

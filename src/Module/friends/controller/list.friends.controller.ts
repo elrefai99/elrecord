@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { FriendsService } from "../friends.service";
 import { IPayload, TStatus } from "../@types";
 
-export const listOfFriendsController = asyncHandler(
+export const listOfFriendsController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const payload: IPayload = {
                userId: req.user.id,

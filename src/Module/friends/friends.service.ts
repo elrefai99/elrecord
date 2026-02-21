@@ -1,4 +1,4 @@
-import { cache_service } from "../../Common/Redis/cache.service.fun";
+import { cache_service } from "../../Common/functions/Redis/cache.service.fun";
 import prisma from "../../core/prisma";
 import { PrismaClient } from "../../generated/prisma";
 import { IPayload } from "./@types";

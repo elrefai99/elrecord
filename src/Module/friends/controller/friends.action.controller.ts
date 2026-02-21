@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { FriendsService } from "../friends.service";
 
-export const acceptRequestController = asyncHandler(
+export const acceptRequestController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const { requestId } = req.params;
           const friendService = new FriendsService()
@@ -17,7 +17,7 @@ export const acceptRequestController = asyncHandler(
      }
 )
 
-export const rejectRequestController = asyncHandler(
+export const rejectRequestController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const { requestId } = req.params;
           const friendService = new FriendsService()

@@ -1,4 +1,4 @@
-import redis from "../../core/redis";
+import redis from "../../../core/redis";
 
 export class cache_service {
      public async getData<T>(key: any): Promise<T | any> {

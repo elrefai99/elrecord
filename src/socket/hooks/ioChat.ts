@@ -1,6 +1,7 @@
 import { Namespace, Socket } from "socket.io";
 import prisma from "../../core/prisma";
 import { v4 as uuidv4 } from 'uuid';
+import { encryptDataFunction } from "../../Common/functions/encrypt";
 
 export const ioChat = (io: Namespace, socket: Socket, userSockets: Map<string, string>) => {
      const senderID: string = socket.data.user._id.toString();
@@ -8,6 +9,7 @@ export const ioChat = (io: Namespace, socket: Socket, userSockets: Map<string, s
 
      socket.on('sendMessage', async (room: number, receiverID: string, message: string,) => {
           socket.join(String(room))
+          const encrypt_message = encryptDataFunction(message, process.env.ENCRYPTION_KEY as string)
 
           let rooms = await prisma.rooms.findFirst({
                where: {
@@ -32,7 +34,7 @@ export const ioChat = (io: Namespace, socket: Socket, userSockets: Map<string, s
                     users: {
                          set: [Number(senderID), Number(receiverID)]
                     },
-                    message,
+                    message: encrypt_message,
                     status: 'DELIVERED',
                     maxSize_number: 5,
                     maxSize_unit: 'MB',
@@ -43,9 +45,13 @@ export const ioChat = (io: Namespace, socket: Socket, userSockets: Map<string, s
           })
 
           io.to(String(room)).emit('newMessage', {
-               ...chat,
+               chat: {
+                    ...chat,
+                    message,
+               },
                senderID: {
                     _id: Number(senderID),
+                    avatar: socket.data.user?.avatar,
                     fullname: `${socket.data.user?.fullname}`,
                }
           })
