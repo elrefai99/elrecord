@@ -20,9 +20,10 @@ export class auth_service {
                          status: UserStatus.ACTIVE
                     },
                });
-               return user;
+               return user; // Returns null if no user found, or the user object if found
           } catch (error) {
-               throw error;
+               console.error('Error finding user by email:', error);
+               return null; // Return null instead of throwing error
           }
      }
 

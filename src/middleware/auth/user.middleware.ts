@@ -7,7 +7,7 @@ import prisma from "../../core/prisma";
 export const userMiddleware = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const authHeader = req.headers.authorization;
-          const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.pending_token;
+          const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.access_token;
 
           if (token) {
                const publicKey = createPublicKey(process.env.PUBLIC_ACCESS_TOKEN_SECRET as string)

@@ -1,63 +1,77 @@
-
 import { defineStore } from 'pinia';
-import api from '../utils/axios';
 import { ref, computed } from 'vue';
+import { authService } from '../services/auth.service';
+import { userService } from '../services/user.service';
+import { socketService } from '../services/socket.service';
+import { LoginRequest, RegisterRequest, User } from '../types/api';
+import { parseError } from '../utils/error-handler';
 
 export const useAuthStore = defineStore('auth', () => {
-     const user = ref<any>(null);
-     const token = ref<string | null>(localStorage.getItem('access_token'));
-     const isAuthenticated = computed(() => !!token.value);
+     const user = ref<User | null>(null);
+     const isLoading = ref(false);
+     const error = ref<string | null>(null);
+     const isAuthenticated = computed(() => !!user.value);
 
-     async function login(data: any) {
+     async function login(data: LoginRequest) {
+          isLoading.value = true;
+          error.value = null;
           try {
-               const response = await api.post('/auth/login', data); // using updated baseURL
-               // Adjust based on your API response structure
-               token.value = response.data.token;
-               if (token.value) {
-                    localStorage.setItem('access_token', token.value);
-               }
+               await authService.login(data);
                await fetchProfile();
-          } catch (error) {
-               throw error;
+               socketService.connect();
+          } catch (err: any) {
+               error.value = parseError(err);
+               throw err;
+          } finally {
+               isLoading.value = false;
           }
      }
 
-     async function register(data: any) {
+     async function register(data: RegisterRequest) {
+          isLoading.value = true;
+          error.value = null;
           try {
-               await api.post('/auth/register', data);
-               // After register, you might want to auto-login or redirect to login
-          } catch (error) {
-               throw error;
+               await authService.register(data);
+               // Optionally auto-login or redirect
+          } catch (err: any) {
+               error.value = parseError(err);
+               throw err;
+          } finally {
+               isLoading.value = false;
+          }
+     }
+
+     async function logout() {
+          try {
+               await authService.logout();
+               user.value = null;
+               socketService.disconnect();
+          } catch (err) {
+               console.error('Logout error:', err);
           }
      }
 
      async function fetchProfile() {
-          if (!token.value) return;
           try {
-               const response = await api.get('/user/profile');
-               user.value = response.data;
-          } catch (error) {
-               // handle error, maybe logout if 401
-               console.error(error);
-               logout();
+               const response = await userService.getProfile();
+               user.value = response.data.data!;
+               if (!socketService.connected) {
+                    socketService.connect();
+               }
+          } catch (err) {
+               user.value = null;
+               throw err;
           }
-     }
-
-     function logout() {
-          token.value = null;
-          user.value = null;
-          localStorage.removeItem('access_token');
-          // also call backend logout if needed
-          api.post('/auth/logout').catch(() => { });
      }
 
      return {
           user,
-          token,
+          isLoading,
+          error,
           isAuthenticated,
           login,
           register,
-          fetchProfile,
-          logout
+          logout,
+          fetchProfile
      };
 });

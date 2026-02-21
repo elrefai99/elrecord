@@ -86,12 +86,12 @@ export class FriendsService {
                const friend = isSender ? friendship.receiver : friendship.sender
 
                return {
-                    friendshipId: friendship.id,
+                    id: friendship.id,
                     uuid: friendship.uuid,
                     status: friendship.status,
                     createdAt: friendship.createdAt,
                     isSender,
-                    friend: {
+                    user: {
                          id: friend.id,
                          email: friend.email,
                          name: friend.fullname,

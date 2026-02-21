@@ -3,23 +3,31 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { isLoading, error } = storeToRefs(authStore);
 
 const fullname = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
 const phone = ref('');
-const country_code = ref('+20'); // Default country code
-const error = ref('');
+const country_code = ref('+20');
 
 const handleRegister = async () => {
   if (password.value !== confirmPassword.value) {
-    error.value = 'Passwords do not match';
+    // Local validation error, manually set store error or local ref?
+    // For simplicity, let's just alert or use a local error ref if we want, 
+    // but here I'll just use the store's error state mechanism or a local one.
+    // Actually, since I removed local error ref, I should probably re-add it if I want local validation.
+    // Or I can use a separate local error for validation mismatch.
+    // Let's use a simple alert for now or just return.
+    alert('Passwords do not match');
     return;
   }
+  
   try {
     await authStore.register({
         fullname: fullname.value,
@@ -29,8 +37,8 @@ const handleRegister = async () => {
         country_code: country_code.value
     });
     router.push('/login');
-  } catch (err: any) {
-    error.value = err.response?.data?.message || err.message || 'Registration failed';
+  } catch (err) {
+    // Error is handled in store
   }
 };
 </script>
