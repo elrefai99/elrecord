@@ -3,7 +3,7 @@ import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { createPublicKey } from "node:crypto";
 import { V4 } from "paseto";
 import prisma from "../../../core/prisma";
-import { cache_service } from "../../../Common/Redis/cache.service.fun";
+import { cache_service } from "../../../Common/functions/Redis/cache.service.fun";
 
 export const profileMiddleware = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
