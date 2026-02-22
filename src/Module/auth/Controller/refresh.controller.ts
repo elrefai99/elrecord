@@ -1,12 +1,12 @@
 import { asyncHandler } from "../../../utils/asyncHandler.utils"
-import { NextFunction, Request, Response } from "express"
+import { NextFunction, Request, Response, RequestHandler } from "express"
 import ServerError from "../../../utils/api.errors.utils"
 import { createPublicKey } from "node:crypto"
 import { V4 } from "paseto"
 import prisma from "../../../core/prisma"
 import { token_PASETO } from "../utils/paseto"
 
-export const refreshController = asyncHandler(
+export const refreshController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const token: undefined = req.cookies.refresh_token
 
@@ -29,12 +29,12 @@ export const refreshController = asyncHandler(
                // calculate remaining time for the refresh token
                const expireDate: Date = new Date(payload.exp)
                const remainingMs: number = expireDate.getTime() - Date.now()
-               const remainingSeconds: number = Math.floor(remainingMs / 1000)
+               const remainingDays: number = Math.floor(remainingMs / (1000 * 60 * 60 * 24))
 
                const token: string = await token_PASETO(payload, "access")
-               const tokenRefresh: string = await token_PASETO(payload, "refresh", `${remainingSeconds}`)
-               res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: remainingSeconds })
-               res.cookie("refresh_token", tokenRefresh, { httpOnly: true, secure: true, sameSite: "strict", maxAge: remainingSeconds })
+               const tokenRefresh: string = await token_PASETO(payload, "refresh", `${remainingDays}d`)
+               res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: remainingMs })
+               res.cookie("refresh_token", tokenRefresh, { httpOnly: true, secure: true, sameSite: "strict", maxAge: remainingMs })
                res.status(200).json({ code: 200, status: "OK", message: "Refresh token successful" })
                return
           }).catch((err) => {

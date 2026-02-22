@@ -1,12 +1,12 @@
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, RequestHandler } from "express";
 import { login_dto } from "../DTO/index.dto";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
 import bcrypt from 'bcryptjs'
 import { token_PASETO } from "../utils/paseto";
 
-export const loginController = asyncHandler(
+export const loginController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const { email, password } = req.body as login_dto
 
