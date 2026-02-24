@@ -4,7 +4,7 @@ import ServerError from "../../../utils/api.errors.utils"
 import { createPublicKey } from "node:crypto"
 import { V4 } from "paseto"
 import prisma from "../../../core/prisma"
-import { token_PASETO } from "../utils/paseto"
+import { token_PASETO } from "../guard/paseto"
 
 export const refreshController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
