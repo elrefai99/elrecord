@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { encryptDataFunction } from "../../Common/functions/encrypt";
 
 export const ioChat = (io: Namespace, socket: Socket, userSockets: Map<string, string>) => {
-     const senderID: string = socket.data.user._id.toString();
+     const senderID: string = socket.data.user.id.toString();
      userSockets.set(senderID, socket.id);
 
      socket.on('sendMessage', async (room: number, receiverID: string, message: string,) => {

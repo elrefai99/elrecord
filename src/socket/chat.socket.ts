@@ -1,16 +1,16 @@
 import { Namespace, Socket } from "socket.io";
-import { socketMiddleware } from "./middleware/auth.middleware";
+import { socketAuthPipe } from "./pipe/auth.pipe";
 import { ioChat } from "./hooks/ioChat";
 
 export const chatSocket = (io: Namespace,) => {
      const userSockets: Map<string, string> = new Map<string, string>();
      const chatSockets: Map<string, string> = new Map<string, string>();
 
-     io.use(socketMiddleware);
+     io.use(socketAuthPipe);
 
      io.on('connection', async (socket: Socket) => {
 
-          const senderID: string = socket.data.user._id.toString();
+          const senderID: string = socket.data.user.id.toString();
           userSockets.set(senderID, socket.id);
           chatSockets.set(senderID, socket.id);
 

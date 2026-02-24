@@ -5,7 +5,7 @@ import prisma from "../../core/prisma";
 import { createPublicKey } from "crypto";
 import { V4 } from "paseto";
 
-export const socketMiddleware = asyncSocketHandler(
+export const socketAuthPipe = asyncSocketHandler(
      async (socket: Socket, next: (err?: Error) => void) => {
           const token =
                socket.handshake.auth?.token ||
@@ -22,6 +22,8 @@ export const socketMiddleware = asyncSocketHandler(
           }
           const publicKey = createPublicKey(process.env.PUBLIC_ACCESS_TOKEN_SECRET as string)
           await V4.verify(token, publicKey).then(async (payload: any) => {
+               console.log(payload);
+
                const checkUser = await prisma.user.findUnique({ where: { id: payload.data.user_id } })
 
                if (!checkUser) {
