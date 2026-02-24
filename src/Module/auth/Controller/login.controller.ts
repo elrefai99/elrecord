@@ -26,11 +26,11 @@ export const loginController: RequestHandler = asyncHandler(
                return
           }
 
-          const token = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string }, "access")
-          const refreshToken = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string }, "refresh")
+          const token = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string, expireAt: new Date().getTime() + 1000 * 60 * 60 * 2 }, "access")
+          const refreshToken = await token_PASETO({ data: { user_id: user.id }, role: user.role, access_device: req.headers["user-agent"] as string, expireAt: new Date().getTime() + 1000 * 60 * 60 * 24 * 30 }, "refresh")
 
-          res.cookie("refresh_token", refreshToken, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 7 });
-          res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1 });
+          res.cookie("refresh_token", refreshToken, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 30 });
+          res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 2 });
 
           res.status(200).json({ code: 200, status: "OK", message: "Login successful", token })
 

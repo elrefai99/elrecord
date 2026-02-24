@@ -4,4 +4,5 @@ export interface ITokenPayload {
      site?: string;
      token_version?: number;
      access_device?: string;
+     expireAt?: number
 }
