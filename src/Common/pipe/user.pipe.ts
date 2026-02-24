@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler.utils";
 import { createPublicKey } from "node:crypto";
 import { V4 } from "paseto";
 import prisma from "../../core/prisma";
 
-export const userMiddleware = asyncHandler(
+export const userPipe: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const authHeader = req.headers.authorization;
           const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.access_token;

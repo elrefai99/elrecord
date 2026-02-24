@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../utils/asyncHandler.utils";
 import { createPublicKey } from "node:crypto";
 import { V4 } from "paseto";
 import prisma from "../../core/prisma";
-import { cache_service } from "../../Common/functions/Redis/cache.service.fun";
+import { cache_service } from "../functions/Redis/cache.service.fun";
 
-export const profileMiddleware = asyncHandler(
+export const profilePipe: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const authHeader = req.headers.authorization;
           const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.pending_token;

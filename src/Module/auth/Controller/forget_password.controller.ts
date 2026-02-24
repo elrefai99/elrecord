@@ -1,11 +1,11 @@
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
-import { token_PASETO } from "../utils/paseto";
+import { token_PASETO } from "../guards/paseto.guard";
 import { addEmailsJobToQueue } from "../../../Queue/Emails/queue.emails";
 
-export const forgetPasswordController = asyncHandler(
+export const forgetPasswordController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const { email } = req.body
           const authService: auth_service = new auth_service()

@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { register_dto } from "../DTO/index.dto";
 import { auth_service } from "../auth.service";
 import ServerError from "../../../utils/api.errors.utils";
 import { addOTPJobToQueue } from "../../../Queue/OTP/queue.otp";
-import { token_PASETO } from "../utils/paseto";
+import { token_PASETO } from "../guards/paseto.guard";
 
-export const registerController = asyncHandler(
+export const registerController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const data = req.body as register_dto
           const authService = new auth_service()

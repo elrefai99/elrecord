@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userMiddleware } from "../../middleware/auth/user.middleware";
+import { userPipe } from "../../Common/pipe/user.pipe";
 import {
      requestFriendController,
      listOfFriendsController,
@@ -9,10 +9,10 @@ import {
 
 const router: Router = Router()
 
-router.post("/send", userMiddleware, requestFriendController)
-router.get("/list", userMiddleware, listOfFriendsController)
-router.post("/accept/:requestId", userMiddleware, acceptRequestController)
-router.post("/reject/:requestId", userMiddleware, rejectRequestController)
+router.post("/send", userPipe, requestFriendController)
+router.get("/list", userPipe, listOfFriendsController)
+router.post("/accept/:requestId", userPipe, acceptRequestController)
+router.post("/reject/:requestId", userPipe, rejectRequestController)
 
 
 export default router
