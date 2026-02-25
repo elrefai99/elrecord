@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, RequestHandler } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import { cache_service } from "../../../Common/functions/Redis/cache.service.fun";
 
-export const profileController = asyncHandler(
+export const profileController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, _next: NextFunction) => {
           const user = req.user
           const redis: cache_service = new cache_service()

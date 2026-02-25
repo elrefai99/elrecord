@@ -1,143 +1,183 @@
-# Elrecord Backend
+<h1 align="center">Elrecord Backend</h1>
 
-Elrecord is a powerful, scalable backend for a real-time chat application inspired by Discord. It supports direct messaging, group chats, and server-based communities with voice/video call capabilities.
+<p align="center">
+  <strong>A Powerful & Scalable Chat Application Backend</strong>
+</p>
 
-## 🚀 Features
+<p align="center">
+  Elrecord is a highly scalable, real-time backend infrastructure designed for a feature-rich community and messaging application. Inspired by platforms like Discord, it robustly supports direct messaging (DMs), group chatting, large-scale community servers, dynamic voice/video interactions, and comprehensive background processing.
+</p>
 
-- **Direct Messaging (DM)**: Real-time 1-on-1 chat between users.
-- **Group Chats**: Create groups with up to **5 users**, featuring integrated call functionality.
-- **Servers**: Community hubs supporting up to **100 users**.
-- **Scalability via Payments**: Premium options to expand server capacity beyond the default limits.
-- **Real-time Communication**: Powered by Socket.IO for instant messaging and state updates.
-- **Background Processing**: Efficient job queues using BullMQ and Redis.
-- **Robust Security**: Implements Helmet, Rate Limiting, and CORS policies.
-- **Media Management**: AWS S3 integration for file uploads.
+---
 
-## 🛠 Tech Stack
+## 🚀 Key Features
 
-- **Runtime**: Node.js
-- **Language**: TypeScript
-- **Framework**: Express.js
-- **Database**:
-  - **PostgreSQL** (via Prisma ORM) - Primary relational data.
-  - **MongoDB** (via Mongoose) - Flexible document storage.
-- **Caching & Queues**: Redis & BullMQ.
-- **Real-time**: Socket.IO.
-- **Validation**: `class-validator`, `express-validator`.
-- **API Documentation**: Swagger UI.
-- **Containerization**: Docker & Docker Compose.
+*   **Real-Time Messaging**: Built entirely on top of `Socket.IO` to ensure lightweight, instant message delivery and immediate state updates between clients.
+*   **Direct & Community Conversations**:
+    *   **Direct Messaging (DM)**: Fast, real-time 1-on-1 conversations.
+    *   **Group Chats (Rooms)**: Multi-user group environments (supporting up to 5 concurrent users, with configurable boundaries).
+    *   **Servers/Communities**: Massive hubs tailored to support larger groups (up to 100 users, configurable) built directly into the core ecosystem.
+*   **Friendships & Social Graph**: End-to-end `FriendRequest` and social graphs. Easily send, accept, and reject connection requests.
+*   **Advanced Authentication**: Full-fledged session and authentication strategies. Incorporates robust JWT mechanisms and structured **OTP (One-Time Passwords)** for foolproof email/action verifications.
+*   **Background Jobs & Queues**: Leverage `BullMQ` intertwined with `Redis` to manage background communications (e.g., mail sending, push notifications) flawlessly without blocking the main event loop.
+*   **Uncompromising Security**: Implements industry-grade security protocols utilizing `Helmet`, advanced algorithmic Rate-Limiting, strict CORS origin policies, and heavily safeguarded endpoints against brute-force/abuse.
+*   **Data Structure**: Features a beautifully orchestrated dual-database flow, capitalizing mostly on **PostgreSQL (via Prisma ORM)** for strictly relational data (Users, Friends, OTPs, Roles) and supplementary Document-based storage as needed.
 
-## 📂 Project Structure
+---
 
-```
+## 🛠 Tech Stack & Ecosystem
+
+### Core Runtime & Frameworks
+*   **Node.js**: Underlying JS runtime executing the non-blocking I/O operations.
+*   **TypeScript**: Ensures strictly typed interfaces and enterprise-style codebase reliability.
+*   **Express.js**: Foundation of the API request/response cycle.
+
+### Data Layer
+*   **PostgreSQL**: Handled completely via **Prisma ORM**; hosts the core structure (`Users`, `Friends`, `DMs`, `OTP`, `Rooms`).
+*   **MongoDB**: Accessible (via `Mongoose`) for flexible document-driven structures, logging, or non-relational configurations.
+*   **Redis**: Key-value store executing session storage, caching operations, and powering BullMQ.
+
+### Utilities
+*   **Socket.IO**: Bi-directional asynchronous event emitter acting as the backbone for chat/voice signaling.
+*   **BullMQ**: High-performance background worker handling delayed or compute-intensive jobs.
+*   **Swagger (OpenAPI)**: Clean, self-updating interactive API documentation interface.
+*   **Jest**: Integrated testing framework supporting the testing suites.
+*   **Docker & Docker Compose**: Automated containerization allowing localized isolated spinning up to match production.
+
+---
+
+## 📂 Architecture Overview
+
+The backend relies on modularizing boundaries. Core logic is heavily abstracted to minimize cross-contamination across domains.
+
+```tree
 src/
-├── Common/         # Shared utilities and constants
-├── Module/         # Feature modules (Auth, User, Chat, etc.)
-├── Queue/          # Background job workers (BullMQ)
-├── core/           # Core configurations (DB, Redis, Env)
-├── middleware/     # Global middlewares
-├── utils/          # Helper functions
-├── app.ts          # Application entry point
-└── app.module.ts   # Main route assembler
+├── Common/         # Reusable application guards, pipes, schemas, and structural utility logic.
+├── Module/         # The isolated business domain areas (Controllers, Services, Routes):
+│   ├── auth/       # Authentication, Sign In, Sign Up logic.
+│   ├── user/       # End-user profile operations and queries.
+│   ├── friends/    # Managing the friend request graph (Send, Accept, Reject actions).
+│   └── otp/        # Safe one-time credential management and email verification logic.
+├── Queue/          # Dedicated worker initializations intercepting BullMQ dispatch events.
+├── core/           # Bootstrap contexts (DB Initializations, Redis Integrations, Env Checkers).
+├── utils/          # Pure helper constructs, rate limiters, formatters.
+├── app.config.ts   # Express bootstrap layer (Security middlewares, body parsers, limits).
+├── app.module.ts   # Absolute route registrar dynamically mapping Modules onto /api/v1/ routes.
+└── app.ts          # Root entry point resolving HTTP and Socket.IO servers.
 ```
+
+---
 
 ## ⚙️ Prerequisites
 
-Ensure you have the following installed:
-- **Node.js** (v18+ recommended)
-- **pnpm** (Package Manager)
-- **Redis** (for caching and queues)
-- **PostgreSQL**
-- **MongoDB**
+To run this backend locally, ensure that your ecosystem satisfies the following constraints:
+*   **Node.js**: `v18.x` or higher (utilizing `pnpm` as tracking manager).
+*   **pnpm**: Recommended for faster module resolutions.
+*   **Redis Server**: Running locally or exposed via URI.
+*   **PostgreSQL**: Available on port 5432 or equivalently routable.
+*   *(Optional)* **Docker Desktop**: In case you intend to spin up required DB environments without cluttering hosts.
 
-## 📦 Installation
+---
 
-1. **Clone the repository:**
+## 📦 Installation & Setup
+
+1. **Clone the Source:**
    ```bash
    git clone <repository-url>
-   cd elrecord
+   cd elrecord/Backend
    ```
 
-2. **Install dependencies:**
+2. **Retrieve Dependencies:**
    ```bash
    pnpm install
    ```
 
-3. **Environment Configuration:**
-   Create a `.env` file in the root directory based on `.env.dev` or the example below:
+3. **Environment Blueprint:**
+   Duplicate the provided `.env.dev` script to `.env` and fill the variables corresponding to your localized configuration:
 
    ```env
    NODE_ENV=development
    PORT=9999
    API_ENDPOINT_URL=http://localhost:9999
-   
+
    # Database
    DATABASE_URL="postgresql://user:password@localhost:5432/elrecord?schema=public"
    MONGODB_URI="mongodb://localhost:27017/elrecord"
-   
+
    # Redis
    REDIS_HOST=localhost
    REDIS_PORT=6379
-   
-   # Authentication
-   JWT_SECRET=your_super_secret_key
-   
-   # AWS S3 (if applicable)
-   AWS_ACCESS_KEY_ID=your_access_key
-   AWS_SECRET_ACCESS_KEY=your_secret_key
-   AWS_REGION=us-east-1
-   AWS_BUCKET_NAME=your_bucket
+
+   # Security Signatures
+   JWT_SECRET="<YOUR_SECRET>"
    ```
 
-4. **Database Setup:**
+4. **Prepare the Data Layer:**
+   Deploy the relational blueprints mapped in Prisma to your connected Postgres instance:
    ```bash
-   # Generate Prisma client
-   npx prisma generate
-   
-   # Push schema to database
-   npx prisma db push
+   # Generates TypeScript typings out of the Prisma definitions
+   pnpm dlx prisma generate
+
+   # Syncs the DB schema aggressively
+   pnpm dlx prisma db push
    ```
 
-## 🚀 Running the Application
+---
 
-### Development Mode
-Runs the server with hot-reload (Nodemon) and starts the queue worker.
+## 🚀 Running the App
+
+### 🛠 Development Workflow
+This boots the API server wrapped with `Nodemon` (hot-reloading enabled) while simultaneously firing up the background Queue Workers side-by-side using `concurrently`.
 ```bash
 pnpm dev
 ```
 
-### Production Mode
-Builds the TypeScript code and runs the compiled JavaScript.
+### 🚢 Production Deployment
+Prepare the robust transpiled scripts into `/dist` and ignite natively:
 ```bash
 pnpm build
 pnpm start
 ```
 
-### Docker
-You can also run the application using Docker Compose:
+### 🐳 Docker Compose (Easiest Isolated Environment)
+Avoid manually spinning up Redis or DB's, rely on Docker to bind everything appropriately:
 ```bash
 docker-compose up -d
 ```
 
-## 📜 Scripts
+---
 
-| Script | Description |
+## 📜 Available Scripts
+
+| Command | Action Handled |
 | :--- | :--- |
-| `pnpm dev` | Start the development server with hot-reload. |
-| `pnpm build` | Compile TypeScript to JavaScript in `dist/`. |
-| `pnpm start` | Run the production build. |
-| `pnpm lint` | Lint the codebase using ESLint. |
-| `pnpm test` | Run tests using Jest. |
-| `pnpm taze:update` | Update dependencies. |
+| `pnpm dev` | Executes development engine alongside Queue Worker. |
+| `pnpm build` | Typescript transpilation (Outputs strictly typed bundle to `/dist`). |
+| `pnpm start` | Bootstraps production-ready bundled Javascript file. |
+| `pnpm lint` | Triggers ESLint execution across the codebase, scanning for layout standard faults. |
+| `pnpm test` | Locates and sequentially triggers Jest. |
+| `pnpm taze:update` | Updates deeply nested dependencies via `taze` seamlessly. |
 
-## 🤝 Contributing
+---
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature/amazing-feature`).
-3. Commit your changes (`git commit -m 'Add some amazing feature'`).
-4. Push to the branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
+## 🛡 API Security & Standards
 
-## 📄 License
+*   All heavy file streams are constrained effectively (Maximum payload of `75MB` limits configured internally via the application layer).
+*   Traffic originates globally from strictly `allowedOrigins` (Vercel, FlyIO implementations supported actively).
+*   Real-visitor IP proxying implemented (Handling `cf-connecting-ip`, `x-real-ip`).
 
-This project is licensed under the ISC License.
+---
+
+## 🤝 Contribution Guidelines
+
+1. **Fork** the Repository to your namespace.
+2. Checkout logically named feature branches: `git checkout -b feature/cool-chat-addition`
+3. Commit neatly (We advise angular-style commit patterns). `git commit -m "feat(socket): add broadcasting for new friendships"`
+4. Push safely: `git push origin feature/cool-chat-addition`
+5. Open an insightful **Pull Request**.
+
+---
+
+<p align="center">
+  <i>Created securely using TypeScript & Express. For more structural questions, please view `/docs` or the API mapping.</i>
+</p>

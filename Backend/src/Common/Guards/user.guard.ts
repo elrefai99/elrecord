@@ -12,7 +12,7 @@ export const userGuard: RequestHandler = asyncHandler(
           if (token) {
                const publicKey = createPublicKey(process.env.PUBLIC_ACCESS_TOKEN_SECRET as string)
                await V4.verify(token, publicKey).then(async (payload: any) => {
-                    const checkUser = await prisma.user.findUnique({ where: { id: payload.data.user_id }, select: { id: true } })
+                    const checkUser = await prisma.user.findUnique({ where: { id: payload.data.user_id }, select: { id: true, email: true } })
 
                     if (!checkUser) {
                          res.status(401).json({ code: 401, status: "Unauthorized", timestamp: new Date(), message: "Invalid token" })

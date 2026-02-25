@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, RequestHandler } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import prisma from "../../../core/prisma";
 
-export const editController = asyncHandler(
+export const editController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const user = await prisma.user.findUnique({
                where: {
