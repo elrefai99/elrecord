@@ -1,18 +1,18 @@
 import { Router } from "express";
-import { userMiddleware } from "../../middleware/auth/user.middleware";
 import {
      requestFriendController,
      listOfFriendsController,
      acceptRequestController,
      rejectRequestController
 } from "./friends.controller";
+import { userGuard } from "../../Common/Guards/user.guard";
 
 const router: Router = Router()
 
-router.post("/send", userMiddleware, requestFriendController)
-router.get("/list", userMiddleware, listOfFriendsController)
-router.post("/accept/:requestId", userMiddleware, acceptRequestController)
-router.post("/reject/:requestId", userMiddleware, rejectRequestController)
+router.post("/send", userGuard, requestFriendController)
+router.get("/list", userGuard, listOfFriendsController)
+router.post("/accept/:requestId", userGuard, acceptRequestController)
+router.post("/reject/:requestId", userGuard, rejectRequestController)
 
 
 export default router

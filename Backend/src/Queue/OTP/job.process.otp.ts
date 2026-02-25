@@ -1,7 +1,8 @@
 import { Job } from "bullmq";
 import { v4 as uuidv4 } from 'uuid';
 import prisma from "../../core/prisma";
-import { nodemailerFunction } from "../shared/nodemailer";
+import { nodemailerFunction } from "../provider/nodemailer";
+import { otp_temp } from "./templates";
 
 export const jobProcessor = async (job: Job): Promise<any> => {
      const { userId, email } = job.data;
@@ -17,7 +18,7 @@ export const jobProcessor = async (job: Job): Promise<any> => {
                expiresAt: new Date(Date.now() + 10 * 60 * 1000)
           }
      })
-     const emailbody = `<p>your otp is ${otp.code}</p>`
+     const emailbody = otp_temp({ name: email }, otp.code)
 
      await nodemailerFunction(email, emailbody, "OTP")
 };

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import ServerError from "../../../utils/api.errors.utils";
 import prisma from "../../../core/prisma";
@@ -6,7 +6,7 @@ import { UserStatus } from "../../../Common/enum/index.enum";
 import { createPublicKey } from "crypto";
 import { V4 } from "paseto";
 
-export const pendingTokenMiddleware = asyncHandler(
+export const pendingTokenGuard: RequestHandler = asyncHandler(
      async (req: Request, _res: Response, next: NextFunction) => {
           const authHeader = req.headers.authorization;
           const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.pending_token;
