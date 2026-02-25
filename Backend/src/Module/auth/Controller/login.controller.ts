@@ -33,6 +33,6 @@ export const loginController: RequestHandler = asyncHandler(
           res.cookie("access_token", token, { httpOnly: true, secure: true, sameSite: "none", maxAge: 1000 * 60 * 60 * 24 * 1 });
 
           res.status(200).json({ code: 200, status: "OK", message: "Login successful", token })
-
+          return
      }
 )
