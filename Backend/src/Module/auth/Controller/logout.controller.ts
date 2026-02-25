@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 
-export const logoutController = asyncHandler(
+export const logoutController: RequestHandler = asyncHandler(
      async (_req: Request, res: Response, _next: NextFunction) => {
           res.clearCookie("access_token")
           res.clearCookie("refresh_token")

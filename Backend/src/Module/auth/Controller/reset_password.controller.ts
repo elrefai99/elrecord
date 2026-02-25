@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { asyncHandler } from "../../../utils/asyncHandler.utils";
 import ServerError from "../../../utils/api.errors.utils";
 import bcrypt from "bcryptjs";
@@ -7,7 +7,7 @@ import { createPublicKey } from "crypto";
 import prisma from "../../../core/prisma";
 import { UserStatus } from "../../../Common/enum/index.enum";
 
-export const resetPasswordController = asyncHandler(
+export const resetPasswordController: RequestHandler = asyncHandler(
      async (req: Request, res: Response, next: NextFunction) => {
           const authHeader = req.headers.authorization;
           const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : req.cookies.forget_password_token;
